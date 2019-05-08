@@ -1,0 +1,8 @@
+## Indexes a fasta file
+I	input_fasta	file://all_pave_ref.fa digest:md5:48b377d50dec88b97b9f688c09e8b992	SYS:Z:"arc"
+E	SYS:Z:"docker"	IMG:"erictdawson/bwa"	digest:sha256:7ec86b399b5c4852b8c17f09862007ae54349d9a7f2afbb971a7055c3f928b67
+X	bwa	bwa	" index " input_fasta
+O	all_pave_ref.fa.fai	digest:md5:
+O	all_pave_ref.fa.sa	digest:md5:
+O	all_pave_ref.fa.bwt	digest:md5:
+O	all_pave_ref.fa.pac	digest:md5:
