@@ -1,8 +1,10 @@
 ## Indexes a fasta file
 I	input_fasta	file://all_pave_ref.fa digest:md5:48b377d50dec88b97b9f688c09e8b992	SYS:Z:"arc"
 E	SYS:Z:"docker"	IMG:"erictdawson/bwa"	digest:sha256:7ec86b399b5c4852b8c17f09862007ae54349d9a7f2afbb971a7055c3f928b67
-X	bwa	bwa	" index " input_fasta
-O	all_pave_ref.fa.fai	digest:md5:
-O	all_pave_ref.fa.sa	digest:md5:
-O	all_pave_ref.fa.bwt	digest:md5:
-O	all_pave_ref.fa.pac	digest:md5:
+X	bwa bwa	"bwa index all_pave_ref.fa" digest:md5:c10bd31afa4fd13c1aeca1570061a70f input_fasta 
+O	all_pave_ref.fa.fai	digest:md5:bfebfbc863820fb0241c4347aadd0b18	CT:1557330084   ID:fa_index
+O	all_pave_ref.fa.sa	digest:md5:4c33d3b941b67b22c89ce693c763faa8	CT:1557330084   ID:sa_index
+O	all_pave_ref.fa.bwt	digest:md5:d0b7aec2da220ca27aa8d6b10e6d3c1a	CT:1557330084   ID:bwt_index
+O	all_pave_ref.fa.pac	digest:md5:b30b9b554c0184b5c024203155892446	CT:1557330084   ID:pac_index
+O	all_pave_ref.fa.amb	digest:md5:daa751bc13005f3072aadcd960f5fffa	CT:1557330084   ID:amb_index
+O	all_pave_ref.fa.ann	digest:md5:358997d0e9209fa40abcc2000b7de9ab	CT:1557330084   ID:ann_index
