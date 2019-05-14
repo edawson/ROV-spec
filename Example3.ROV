@@ -1,13 +1,13 @@
-I	reads1  file://small.1088.hpv.fq    digest:md5:f60cd1ec9ccb6b3774d471f369be6a8f SYS:Z:"arc"
-I	input_fasta	file://all_pave_ref.fa digest:md5:48b377d50dec88b97b9f688c09e8b992	SYS:Z:"arc"
-I	fa_index    file://all_pave_ref.fa.fai	digest:md5:bfebfbc863820fb0241c4347aadd0b18	SYS:Z:"arc"
-I	sa_index    file://all_pave_ref.fa.sa	digest:md5:4c33d3b941b67b22c89ce693c763faa8	SYS:Z:"arc"
-I	bwt_index   file://all_pave_ref.fa.bwt	digest:md5:d0b7aec2da220ca27aa8d6b10e6d3c1a	SYS:Z:"arc"
-I	pac_index   file://all_pave_ref.fa.pac	digest:md5:b30b9b554c0184b5c024203155892446	SYS:Z:"arc"
-I	amb_index   file://all_pave_ref.fa.amb	digest:md5:daa751bc13005f3072aadcd960f5fffa	SYS:Z:"arc"
-I	ann_index   file://all_pave_ref.fa.ann	digest:md5:358997d0e9209fa40abcc2000b7de9ab	SYS:Z:"arc"
-E   SYS:"docker"    IMG:"erictdawson/bwa"   digest:sha256:7ec86b399b5c4852b8c17f09862007ae54349d9a7f2afbb971a7055c3f928b67
+I	small.1088.hpv.fq  file://small.1088.hpv.fq    DIGEST:md5:f60cd1ec9ccb6b3774d471f369be6a8f SYS:Z:"arc"
+I	all_pave_ref.fa	file://all_pave_ref.fa DIGEST:md5:48b377d50dec88b97b9f688c09e8b992	SYS:Z:"arc"
+I	all_pave_ref.fa.fai    file://all_pave_ref.fa.fai	DIGEST:md5:bfebfbc863820fb0241c4347aadd0b18	SYS:Z:"arc"
+I	all_pave_ref.fa.sa    file://all_pave_ref.fa.sa	DIGEST:md5:4c33d3b941b67b22c89ce693c763faa8	SYS:Z:"arc"
+I	all_pave_ref.fa.bwt   file://all_pave_ref.fa.bwt	DIGEST:md5:d0b7aec2da220ca27aa8d6b10e6d3c1a	SYS:Z:"arc"
+I	all_pave_ref.fa.pac   file://all_pave_ref.fa.pac	DIGEST:md5:b30b9b554c0184b5c024203155892446	SYS:Z:"arc"
+I	all_pave_ref.fa.amb   file://all_pave_ref.fa.amb	DIGEST:md5:daa751bc13005f3072aadcd960f5fffa	SYS:Z:"arc"
+I	all_pave_ref.fa.ann   file://all_pave_ref.fa.ann	DIGEST:md5:358997d0e9209fa40abcc2000b7de9ab	SYS:Z:"arc"
+E   SYS:"docker"    IMG:"erictdawson/bwa"   DIGEST:sha256:7ec86b399b5c4852b8c17f09862007ae54349d9a7f2afbb971a7055c3f928b67
 P   threads PRE:"-t" VAL:I:4
 P   read_group  PRE:"-R"    VAL:Z:"'@RG\tID:rg1\tSM:rg1'"
-X   bwa bwa "bwa mem all_pave_ref.fa -R '@RG\tID:rg1\tSM:rg1' -t 4 " digest:md5:c10bd31afa4fd13c1aeca1570061a70f reads1   reads2  sa_index    pac_index   bwt_index   ann_index   amb_index
-O   bam_file    file://output.sam digest:md5:05c2561a4ee0d3e9c8486cb61eb06044   CT:1557333112
+X   bwa bwa "bwa mem all_pave_ref.fa -R '@RG\tID:rg1\tSM:rg1' -t 4 " DIGEST:md5:c10bd31afa4fd13c1aeca1570061a70f reads1   reads2  sa_index    pac_index   bwt_index   ann_index   amb_index
+O   bam_file    file://output.sam DIGEST:md5:05c2561a4ee0d3e9c8486cb61eb06044   CT:1557333112

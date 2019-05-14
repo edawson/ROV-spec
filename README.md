@@ -1,7 +1,8 @@
 ROV-spec
 ---------------------
-###The pROVenance data lineage format specification  
-Eric T Dawson
+
+The pROVenance data lineage format specification  
+Eric T. Dawson
 
 ## Background
 Among other pitfalls, modern cloud analysis platforms for bioinformatics lack a
@@ -12,59 +13,23 @@ machine-readable text format. From a single ROV file, a user should be able to
 completely run and analysis assuming publicly available data and compute
 resources.
 
-## ROV basics
-ROV is a tidy-translatable data format, meaning:
-- The overall structure is implicitly a table where:
-    - Every row is a single atomic observation
-    - Every column is a single variable
 
-However, columns are not always delimited by the same character, so they may
-become compressed into what appears as a single column but is in fact multiple
-variables. While not truly tidy, a series of string split operations and sorts
-could produce a tidy format with only the information present in the table.
+## ROV schema
+ROV is a tab-separated, line-delimited format. Each line describes an *occurrence*
+of a specific *type*. There are fix basic ROV types:  
 
+1. I / input : A file, which is defined with a universal-style URL-like identifier.
+   These become inputs to tasks.
+2. P / parameter : Non-file inputs to tasks (e.g. integers, strings, environment variables, etc)
+3. E / environment : A strict description of the compute environment used, including:
+    - a SYS tag, describing the system that ran the command.
+    - other information that defines the compute environment (e.g. CPUs, system name, etc)
+4. X / execution : Describes the command line that is run and its dependant inputs / parameters.
+5. O / outputs: Describes the outputs of an executed task.
 
-In addition to being tidy-translatable, ROV has the following tenets:
-- ROV objects (lines of a ROV file) are immutable (i.e. cannot be modified later
-  in the same description). This means ROV is purely functional.
-- Input objects must be defined in a globally-accessible manner. This means that
-  files on cloud storage receive the proper prefix (e.g. "gs://" for Google
-  Cloud) and local files receive "file://" AND require a "SYS:Z:<TAG>" system
-  name tag.
-- Complex operations such as forks and joins are declarative (i.e. the commands
-  to split and join used are clearly described).
+These types completely mirror the types of the [GA4GH TES API](https://github.com/ga4gh/task-execution-schemas). In addition, they represent an independent computation graph.
 
-## ROV's accidental data model
-ROV is simply designed to be a record of work. However, a ROV file also
-describes a complete computation graph when the following criteria are met:
-1. All inputs are globally accessible
-2. All functions (i.e. commands) are accessible from the runtime environment.
-3. All parameters are defined.
-
-When these conditions are met, ROV should perfectly model a computation graph
-and its flow. This means it should be translatable to other workflow languages
-such as WDL, CWL, nextflow, etc.
-
-## Difference between ROV and Workflow Languages
-ROV describes the full computational flow and the complete set of inputs /
-outputs. In this sense, it is akin to a workflow language combined with the
-input descriptors. However, ROV requires much stronger description of inputs /
-intermediate files / outputs. ROV is also intended to be written programatically
-for a single run, whereas workflow scripts are written by hand and run
-programatically on many inputs.
-
-## ROV types
-A full ROV description involves several types. Each type is defined
-by a line and describes an aspect of an analysis that is essential
-to its reproduction.
-
-### Reserved tags
-ROV supports SAM-style tags (i.e. char keys, a type, and an arbitrary
-value). Some special keys are reserved by ROV.
-
-- CT:S:\<val\> : file creation time.
-- DI:S:\<val\> : digest (default: md5) of an input, parameter, or executable
-- SYS:S:\<val\> : system name tag
+Further descriptions of the individual line types follow.
 
 ### Input types
 Files are immutable, meaning outputs can be returned but files can't
@@ -99,6 +64,58 @@ and (optionally) produces outputs.
 ### Output types
 An output describes a file or vale output by a function. Like inputs,
 they must have their global location defined and receive an md5sum.
+
+
+## ROV theory
+ROV is a tidy-translatable data format, meaning:
+- The overall structure is implicitly a table where:
+    - Every row is a single atomic observation
+    - Every column is a single variable
+
+However, columns are not always delimited by the same character, so they may
+become compressed into what appears as a single column but is in fact multiple
+variables. While not truly tidy, a series of string split operations and sorts
+could produce a tidy format with only the information present in the table.
+
+
+In addition to being tidy-translatable, ROV has the following tenets:
+- ROV objects (lines of a ROV file) are immutable (i.e. cannot be modified later
+  in the same description). This means ROV is purely functional.
+- Input objects must be defined in a globally-accessible manner. This means that
+  files on cloud storage receive the proper prefix (e.g. "gs://" for Google
+  Cloud) and local files receive "file://" AND require a "SYS:Z:<TAG>" system
+  name tag.
+- Some ROV types (e.g. X / executable lines) require specific tags to maintain
+  universal operability.
+- Complex operations such as forks and joins are declarative (i.e. the commands
+  to split and join used are clearly described).
+
+## ROV as a computation graph
+ROV is simply designed to be a record of work. However, a ROV file also
+describes a complete computation graph when the following criteria are met:
+1. All inputs are globally accessible
+2. All functions (i.e. commands) are accessible from the runtime environment.
+3. All parameters are defined.
+
+When these conditions are met, ROV should perfectly model a computation graph
+and its flow. This means it should be translatable to other workflow languages
+such as WDL, CWL, nextflow, etc.
+
+## Difference between ROV and Workflow Languages
+ROV describes the full computational flow and the complete set of inputs /
+outputs. In this sense, it is akin to a workflow language combined with the
+input descriptors. However, ROV requires much stronger description of inputs /
+intermediate files / outputs. ROV is also intended to be written programatically
+for a single run, whereas workflow scripts are written by hand and run
+programatically on many inputs.
+
+### Reserved tags
+ROV supports SAM-style tags (i.e. char keys, a type, and an arbitrary
+value). Some special keys are reserved by ROV.
+
+- CT:S:\<val\> : file creation time.
+- DI:S:\<val\> : digest (default: md5) of an input, parameter, or executable
+- SYS:S:\<val\> : system name tag
 
 ### Converting between WDL and ROV
 WDL (as well as many other workflow description languages) define similar concepts to ROV. Given a set of inputs and 
