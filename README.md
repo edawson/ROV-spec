@@ -1,22 +1,42 @@
 ROV-spec
 ---------------------
 
-The pROVenance data lineage format specification  
+**A pROVenance / data lineage format specification**  
+v0.1.0  
 Eric T. Dawson
 
 ## Background
 Among other pitfalls, modern cloud analysis platforms for bioinformatics lack a
 universal mechanism for reproducing analyses. The ROV format attempts to
 succinctly yet completely describe the [Data
-Lineage](https://en.wikipedia.org/wiki/Data_lineage) of a file in a user- and
+Lineage](https://en.wikipedia.org/wiki/Data_lineage) of an output file in a user- and
 machine-readable text format. From a single ROV file, a user should be able to
-completely run and analysis assuming publicly available data and compute
+completely run an analysis, assuming they have access to the data and compute
 resources.
+
+## ROV as a record of work
+Log files are often dense and not human readable. In addition, they often do not capture
+enough information to fully reproduce an analysis. ROV attempts to address this with a simple,
+human readable format that can contain sufficient information for reproducing an analysis. Inputs/outputs
+must be defined by both their name ("ID") and contents (md5sum). Using strict versioning (e.g. docker image tags,
+CPU architecture information, system hostname, date), the execution environments of ROV should be reproducible as well.
+While other formats, such as the [Biocompute Object project from FDA](https://github.com/biocompute-objects/BCO_Specification)
+have sought to address this, these formats have proved unwieldy. ROV attempts to contain only what is necessary and sufficient
+for a given workflow to produce defined outputs from defined inputs. ROV explicitly avoids any information about the user,
+as it is our belief that knowing the user should not be a prerequisite for a successful workflow.
+
+## ROV as a DSL for universal computing
+A convenient byproduct of ROV's design is that it can function as both a record of work
+and a reproducible analysis script. ROV enables anyone with a sufficiently-defined ROV file
+and access to the underlying resources to run and validate a task. When inputs and
+compute environments are public (e.g. public data and Docker images), this means anyone should be able
+to reproduce the original work. This universal computability 
 
 
 ## ROV schema
 ROV is a tab-separated, line-delimited format. Each line describes an *occurrence*
-of a specific *type*. There are fix basic ROV types:  
+of a specific *type*. There are fix basic ROV types, which provide an abstraction for
+describing the necessary units of a task:  
 
 1. I / input : A file, which is defined with a universal-style URL-like identifier.
    These become inputs to tasks.
@@ -27,9 +47,16 @@ of a specific *type*. There are fix basic ROV types:
 4. X / execution : Describes the command line that is run and its dependant inputs / parameters.
 5. O / outputs: Describes the outputs of an executed task.
 
-These types completely mirror the types of the [GA4GH TES API](https://github.com/ga4gh/task-execution-schemas). In addition, they represent an independent computation graph.
+These types completely mirror the types of the [GA4GH TES API](https://github.com/ga4gh/task-execution-schemas).
+In addition, they represent an independent computation graph. ROV should perfectly model most modern workflow languages
+(e.g. WDL, CWL, nextflow, etc) and mapping between the two (plus configured inputs / parameters) should be relatively simple.
 
 Further descriptions of the individual line types follow.
+
+## Future additions
+In the near future we aim to support two new lines (F / fork and J / join) that provide abstractions for splitting/sharding inputs
+and recombining intermediate files. These are analagous to WDL's scatter-gather format, though they may also be used to describe
+UNIX split/cat operations, or domain-specific splits/joins such as splitting a BAM file by chromosome.
 
 ### Input types
 Files are immutable, meaning outputs can be returned but files can't
@@ -37,8 +64,10 @@ be overwritten in the platform. All inputs must be defined globally,
 meaning:  
 - They are prefixed with their storage medium (e.g. "gs://" for GCE or
 "file://" for local storage)
-- If files are local, the system name is tagged.
-- An md5sum digest is included with every input.
+- If files are local, the system name is tagged. For many users within organizations, this is sufficient to identify them.
+If external use is required, we encourage defining a globally unique system name (e.g. NIH-Biowulf)
+- An md5sum digest is included with every input and output
+
 
 ### Parameter types
 Parameters represent inputs that are not stored on a fileystem, and therefore
@@ -47,15 +76,19 @@ floating point numbers, or strings
 
 Parameters can also be defined in an array type (a string) which is passed
 to a Function call. In addition, they may be encapsulated within the
-command line of a function call
+command line of a function call, although we don't recommend this practice.
+
+We discourage environment variables as parameters, as they are easily hidden.
+However, they may be either included as P lines or set up in the Environment
+defined by an E line.
 
 ### Environment types
-An environment is both a physical system or cloud platform and a runtime
+An environment is both a physical system / cloud platform and a runtime
 environment. The environment may be a docker container, a virtual machine
 image, a singularity container, or a set of required local compute commands
 with corresponding versions.
 
-Certain information is required 
+While ROV doesn't explicitly require 
 
 ### Execution types
 An execution defines a command line that takes in inputs and parameters (inside an environment)
