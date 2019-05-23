@@ -131,7 +131,12 @@ describes a complete computation graph when the following criteria are met:
 3. All parameters are defined.
 
 When these conditions are met, ROV should perfectly model a computation graph
-and its flow. This means it should be translatable to other workflow languages
+and its flow:
+- Input, Parameter, Environment, Execution, Output lines are nodes.
+- Outputs which become Inputs of later tasks define data flow (edges).
+- Fork/Join (v0.0.2) lines define edges based on data sharding.
+
+This means it should be translatable to other workflow languages
 such as WDL, CWL, nextflow, etc.
 
 ## Difference between ROV and Workflow Languages
