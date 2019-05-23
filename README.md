@@ -30,7 +30,7 @@ A convenient byproduct of ROV's design is that it can function as both a record 
 and a reproducible analysis script. ROV enables anyone with a sufficiently-defined ROV file
 and access to the underlying resources to run and validate a task. When inputs and
 compute environments are public (e.g. public data and Docker images), this means anyone should be able
-to reproduce the original work. This universal computability 
+to reproduce the original work.
 
 
 ## ROV schema
